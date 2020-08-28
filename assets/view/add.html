@@ -10,26 +10,77 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-12">
-				<div class="form-group">
-					<label for="servers">Servers</label>
-					<select id="servers" class="form-control"></select>
+				<div id="accordion">
+					<div class="card">
+						<div class="card-header">
+							<div data-toggle="collapse" data-target="#add-issue-container">
+								Add Issue
+							</div>
+						</div>
+
+						<div id="add-issue-container" class="collapse show" data-parent="#accordion">
+							<div class="card-body">
+								<div class="form-group">
+									<label for="server-new-issue">Servers</label>
+									<select class="servers-selector form-control" id="server-new-issue" ></select>
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="issue-name" placeholder="Issue Name">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="issue-link" placeholder="Issue Link">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="issue-branch" placeholder="Issue Branch">
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" id="set-current-branch">
+									<label class="form-check-label" for="set-current-branch">
+										Change current branch to this issue
+									</label>
+								</div>
+								<button class="btn btn-primary" id="add-issue">Add Issue</button>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-header">
+							<div data-toggle="collapse" data-target="#add-server-container">
+								Add Server
+							</div>
+						</div>
+
+						<div id="add-server-container" class="collapse" data-parent="#accordion">
+							<div class="card-body">
+								<div class="form-group">
+									<input type="text" class="form-control" id="server-name" placeholder="Server Name">
+								</div>
+								<button class="btn btn-primary" id="add-server">Add Server</button>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-header">
+							<div data-toggle="collapse" data-target="#set-issue-for-server-container">
+								Set Issue For Server
+							</div>
+						</div>
+
+						<div id="set-issue-for-server-container" class="collapse" data-parent="#accordion">
+							<div class="card-body">
+								<div class="form-group">
+									<label for="server-set-issue">Servers</label>
+									<select class="servers-selector form-control" id="server-set-issue"></select>
+								</div>
+								<div class="form-group">
+									<label for="servers">Issues</label>
+									<select class="issues-selector form-control" id="issue-for-server"></select>
+								</div>
+								<button class="btn btn-primary" id="set-issue-for-server">Set</button>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
-					<input type="text" class="form-control" id="issue-name" placeholder="Issue Name">
-				</div>
-				<div class="form-group">
-					<input type="text" class="form-control" id="issue-link" placeholder="Issue Link">
-				</div>
-				<div class="form-group">
-					<input type="text" class="form-control" id="issue-branch" placeholder="Issue Branch">
-				</div>
-				<div class="form-check">
-					<input class="form-check-input" type="checkbox" id="set-current-branch">
-					<label class="form-check-label" for="set-current-branch">
-						Change current branch to this issue
-					</label>
-				</div>
-				<button class="btn btn-primary" id="add-issue">Add Issue</button>
 			</div>
 		</div>
 	</div>
@@ -41,6 +92,7 @@
 	<script src="https://www.gstatic.com/firebasejs/7.19.0/firebase-database.js"></script>
 
 	<script src="/js/db.js"></script>
+	<script src="/js/helpers.js"></script>
 	<script src="/js/add.js"></script>
 </body>
 </html>
