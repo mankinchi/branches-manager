@@ -1,5 +1,5 @@
 /* global $, emailjs */
-/* global getData, getDataOnce */
+/* global getData, getDataOnce, populateIssuesForElement */
 const EMAIL_SERVICE = 'gmail';
 const EMAIL_TEMPLATE = 'request';
 
@@ -7,33 +7,6 @@ emailjs.init('user_EETEdffhneDTGxLFPJlUX');
 
 const usersInfo = {};
 const $tableBody = $('#table-body');
-
-const updateBranchOptions = ($row, issues) => {
-	const currentIssueId = $row.data('issue');
-
-	const userInfo = usersInfo[$row.data('username')];
-
-	const $branchOptionsSelector = $row.find('select');
-	$branchOptionsSelector.empty();
-
-	for (const [
-		issueId,
-		{
-			name,
-			branch,
-			userId: issueUserId,
-		},
-	] of Object.entries(issues)) {
-		if (issueUserId === userInfo.id && issueId !== currentIssueId) {
-			$branchOptionsSelector.append(
-				$('<option>', {
-					text: name,
-					'data-branch': branch,
-				}),
-			);
-		}
-	}
-};
 
 const getTableRow = (username, serverName, serverInfo) => (
 	$('<tr>', {
@@ -74,25 +47,43 @@ getDataOnce('/users', (data) => {
 
 			(($row) => {
 				getData(`/users/${key}/${serverName}`, (server) => {
-					getDataOnce(`/issues/${server.issue}`, (issueData) => {
-						const $link = $row.find('a');
-						$link
-							.attr('href', issueData.link)
-							.text(issueData.name);
+					const completeFnc = (currentIssueId) => {
+						populateIssuesForElement(
+							$row.find('select'),
+							(issueId, {
+								name,
+								branch,
+							}) => {
+								if (issueId !== currentIssueId) {
+									return $('<option>', {
+										text: name,
+										'data-branch': branch,
+									});
+								}
+								return null;
+							},
+							info,
+						);
+					};
 
-						$row.data('issue', issueData);
-					});
+					if (server.issue !== '') {
+						getDataOnce(`/issues/${server.issue}`, (issueData) => {
+							const $link = $row.find('a');
+							$link
+								.attr('href', issueData.link)
+								.text(issueData.name);
+
+							$row.data('issue', issueData);
+
+							completeFnc(server.issue);
+						});
+					} else {
+						completeFnc();
+					}
 				});
 			})($tableRow);
 		}
 	}
-});
-
-getData('/issues', (issues) => {
-	$tableBody.children().each((_, el) => {
-		const $el = $(el);
-		updateBranchOptions($el, issues);
-	});
 });
 
 $tableBody.on('click', '.request-change-btn', (e) => {
