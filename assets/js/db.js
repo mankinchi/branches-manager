@@ -13,7 +13,8 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const db = firebase.database ? firebase.database() : undefined;
+const auth = firebase.auth ? firebase.auth() : undefined;
 
 const getRef = (route) => db.ref(route);
 
