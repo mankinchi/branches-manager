@@ -7,14 +7,15 @@ emailjs.init('user_EETEdffhneDTGxLFPJlUX');
 
 const usersInfo = {};
 const $tableBody = $('#table-body');
+let user;
 
-const getTableRow = (username, serverName, serverInfo) => (
-	$('<tr>', {
-		'data-username': username,
-		'data-server': serverName,
-		'data-issue': serverInfo.issue,
+const getTableRow = (userInfo, serverName, serverInfo) => (
+	$('<tr>').data({
+		userInfo,
+		server: serverName,
+		issue: serverInfo.issue,
 	}).append(
-		$('<td>').text(usersInfo[username].name),
+		$('<td>').text(userInfo.name),
 		$('<td>').text(serverName),
 		$('<td>').append(
 			$('<a>', {
@@ -39,14 +40,14 @@ const getTableRow = (username, serverName, serverInfo) => (
 );
 
 getDataOnce('/users', (data) => {
-	for (const [key, { info, ...servers }] of Object.entries(data)) {
-		usersInfo[key] = info;
+	for (const [userId, { info, ...servers }] of Object.entries(data)) {
+		usersInfo[userId] = info;
 		for (const [serverName, serverInfo] of Object.entries(servers)) {
-			const $tableRow = getTableRow(key, serverName, serverInfo);
+			const $tableRow = getTableRow(info, serverName, serverInfo);
 			$tableBody.append($tableRow);
 
 			(($row) => {
-				getData(`/users/${key}/${serverName}`, (server) => {
+				getData(`/users/${userId}/${serverName}`, (server) => {
 					const completeFnc = (currentIssueId) => {
 						populateIssuesForElement(
 							$row.find('select'),
@@ -94,15 +95,15 @@ $tableBody.on('click', '.request-change-btn', (e) => {
 
 	const $option = $row.find('option:selected');
 
-	const username = $row.data('username');
-	const userInfo = usersInfo[username];
+	const info = $row.data('userInfo');
+	const currentUserInfo = usersInfo[user.uid];
 
 	emailjs.send(
 		EMAIL_SERVICE,
 		EMAIL_TEMPLATE,
 		{
-			email: userInfo.email,
-			user_name: 'Nigel',
+			email: info.email,
+			user_name: currentUserInfo.name,
 			server_name: $row.data('server'),
 			branch_name: $option.data('branch'),
 			issue_name: $option.text(),
@@ -111,8 +112,10 @@ $tableBody.on('click', '.request-change-btn', (e) => {
 	);
 });
 
-auth.onAuthStateChanged((user) => {
-	if (!user) {
+auth.onAuthStateChanged((currentUser) => {
+	if (!currentUser) {
 		window.location.href = '/login';
+	} else {
+		user = currentUser;
 	}
 });
