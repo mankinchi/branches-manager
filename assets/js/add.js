@@ -1,4 +1,4 @@
-/* global $ */
+/* global $, auth */
 /* global getData, getRef, populateIssuesForElement */
 
 getData('/users/tri', ({ info, ...servers }) => {
@@ -74,4 +74,10 @@ $('#set-issue-for-server').click(() => {
 	getRef(`/users/tri/${server}`).set({
 		issue,
 	});
+});
+
+auth.onAuthStateChanged((user) => {
+	if (!user) {
+		window.location.href = '/login';
+	}
 });

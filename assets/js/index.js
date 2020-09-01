@@ -1,4 +1,4 @@
-/* global $, emailjs */
+/* global $, emailjs, auth */
 /* global getData, getDataOnce, populateIssuesForElement */
 const EMAIL_SERVICE = 'gmail';
 const EMAIL_TEMPLATE = 'request';
@@ -30,7 +30,7 @@ const getTableRow = (username, serverName, serverInfo) => (
 					class: 'form-control',
 				}),
 				$('<button>', {
-					class: 'btn request-change-btn',
+					class: 'btn btn-primary request-change-btn',
 					text: 'Request change',
 				}),
 			),
@@ -78,6 +78,9 @@ getDataOnce('/users', (data) => {
 							completeFnc(server.issue);
 						});
 					} else {
+						const $link = $row.find('a');
+						$link.text('');
+
 						completeFnc();
 					}
 				});
@@ -106,4 +109,10 @@ $tableBody.on('click', '.request-change-btn', (e) => {
 			issue_link: $option.data('link'),
 		},
 	);
+});
+
+auth.onAuthStateChanged((user) => {
+	if (!user) {
+		window.location.href = '/login';
+	}
 });
