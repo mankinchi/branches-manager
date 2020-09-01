@@ -32,6 +32,12 @@ const main = () => {
 		);
 	});
 
+	$('#set-current-branch').change((e) => {
+		const isChecked = $(e.currentTarget).prop('checked');
+
+		$('#sever-new-issue-container').toggle(isChecked);
+	});
+
 	$('#add-issue').click(() => {
 		const server = $('#server-new-issue').val();
 		const issueName = $('#issue-name').val();
