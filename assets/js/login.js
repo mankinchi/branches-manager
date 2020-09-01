@@ -36,11 +36,12 @@ $('.btn').click(async (e) => {
 				credential.password,
 			);
 
-			await getRef('/users').push({
-				info: {
-					email: credential.email,
-					name: credential.name,
-					id: user.uid,
+			await getRef('/users').update({
+				[user.uid]: {
+					info: {
+						email: credential.email,
+						name: credential.name,
+					},
 				},
 			});
 
