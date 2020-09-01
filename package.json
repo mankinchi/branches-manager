@@ -4,14 +4,15 @@
   "description": "",
   "main": "script.js",
   "scripts": {
-	"start": "node server.js",
-	"watch": "nodemon server.js",
+    "start": "node server.js",
+    "watch": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "firebase-admin": "^9.1.1"
   },
   "devDependencies": {
     "eslint": "^7.7.0",
