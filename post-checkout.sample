@@ -27,7 +27,7 @@ const execute = async () => {
 	const postData = JSON.stringify({
 		server: config.serverName,
 		branch,
-		username: config.username,
+		email: config.email,
 		password: config.password,
 	});
 
@@ -43,13 +43,10 @@ const execute = async () => {
 
 	const req = http.request(options, (res) => {
 		res.on('data', (data) => {
-			if (res.statusCode !== 200) {
-				console.log(`${data}`);
-			}
+			console.log(`${data}`);
 		});
 
 		res.on('end', () => {
-			console.log('hello');
 			process.exit(0);
 		});
 	});
