@@ -52,7 +52,7 @@ const main = () => {
 			branch: issueBranch,
 			link: issueLink,
 			name: issueName,
-			userId: 1,
+			userId: user.uid,
 		};
 
 		if (setToCurrentBranch) {
@@ -83,6 +83,10 @@ const main = () => {
 		getRef(`/users/${user.uid}/${server}`).set({
 			issue,
 		});
+	});
+
+	$('#logout').click(() => {
+		auth.signOut();
 	});
 };
 

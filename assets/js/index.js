@@ -1,4 +1,5 @@
 /* global $, emailjs, auth */
+
 /* global getData, getDataOnce, populateIssuesForElement */
 const EMAIL_SERVICE = 'gmail';
 const EMAIL_TEMPLATE = 'request';
@@ -110,6 +111,10 @@ $tableBody.on('click', '.request-change-btn', (e) => {
 			issue_link: $option.data('link'),
 		},
 	);
+});
+
+$('#logout').click(() => {
+	auth.signOut();
 });
 
 auth.onAuthStateChanged((currentUser) => {
