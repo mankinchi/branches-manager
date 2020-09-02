@@ -33,7 +33,7 @@ app.post('/api/change-issue', async (req, res) => {
 			branch,
 		} = req.body;
 
-		await axios.post(
+		const { data } = await axios.post(
 			`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.API_KEY}`,
 			{
 				email,
@@ -41,8 +41,6 @@ app.post('/api/change-issue', async (req, res) => {
 				returnSecureToken: true,
 			},
 		);
-
-		// if it fails with logging in, it will run the catch route
 
 		db.ref('/issues').once('value', (snapshot) => {
 			const issues = snapshot.val();
@@ -55,13 +53,12 @@ app.post('/api/change-issue', async (req, res) => {
 				}
 			}
 
-			db.ref(`/users/tri/${server}`).update({
+			db.ref(`/users/${data.localId}/${server}`).update({
 				issue: toBeUpdatedIssueId,
 			});
 		});
-		res.status(200).json({
-			a: 1,
-		});
+
+		res.status(200).send('Successfully change branch on Branches Manager');
 	} catch ({ response }) {
 		const { error } = response.data;
 		console.error(error.message);
