@@ -42,9 +42,13 @@ const getTableRow = (userInfo, serverName, serverInfo) => (
 
 getDataOnce('/users', (data) => {
 	for (const [userId, { info, ...servers }] of Object.entries(data)) {
-		usersInfo[userId] = info;
+		const userData = {
+			...info,
+			id: userId,
+		};
+		usersInfo[userId] = userData;
 		for (const [serverName, serverInfo] of Object.entries(servers)) {
-			const $tableRow = getTableRow(info, serverName, serverInfo);
+			const $tableRow = getTableRow(userData, serverName, serverInfo);
 			$tableBody.append($tableRow);
 
 			(($row) => {
@@ -64,7 +68,7 @@ getDataOnce('/users', (data) => {
 								}
 								return null;
 							},
-							info,
+							userData,
 						);
 					};
 
