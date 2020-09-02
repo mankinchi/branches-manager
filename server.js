@@ -1,5 +1,8 @@
+require('dotenv').config();
+
 const express = require('express');
 const path = require('path');
+const axios = require('axios');
 
 const db = require('./database');
 
@@ -21,30 +24,49 @@ app.get('/login', (_req, res) => {
 	res.sendFile(path.join(__dirname, 'assets', 'view', 'login.html'));
 });
 
-app.post('/api/change-issue', (req, res) => {
-	const {
-		server,
-		branch,
-	} = req.body;
+app.post('/api/change-issue', async (req, res) => {
+	try {
+		const {
+			email,
+			password,
+			server,
+			branch,
+		} = req.body;
 
-	db.ref('/issues').once('value', (snapshot) => {
-		const issues = snapshot.val();
+		await axios.post(
+			`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.API_KEY}`,
+			{
+				email,
+				password,
+				returnSecureToken: true,
+			},
+		);
 
-		let toBeUpdatedIssueId = '';
-		for (const [issueId, { branch: issueBranch }] of Object.entries(issues)) {
-			if (issueBranch === branch) {
-				toBeUpdatedIssueId = issueId;
-				break;
+		// if it fails with logging in, it will run the catch route
+
+		db.ref('/issues').once('value', (snapshot) => {
+			const issues = snapshot.val();
+
+			let toBeUpdatedIssueId = '';
+			for (const [issueId, { branch: issueBranch }] of Object.entries(issues)) {
+				if (issueBranch === branch) {
+					toBeUpdatedIssueId = issueId;
+					break;
+				}
 			}
-		}
 
-		db.ref(`/users/tri/${server}`).update({
-			issue: toBeUpdatedIssueId,
+			db.ref(`/users/tri/${server}`).update({
+				issue: toBeUpdatedIssueId,
+			});
 		});
-	});
-	res.status(200).json({
-		a: 1,
-	});
+		res.status(200).json({
+			a: 1,
+		});
+	} catch ({ response }) {
+		const { error } = response.data;
+		console.error(error.message);
+		res.status(400).send(error.message);
+	}
 });
 
 app.listen(port, () => {
