@@ -1,0 +1,66 @@
+#!/usr/bin/env node
+
+const http = require('http');
+const util = require('util');
+const childProcessExec = require('child_process').exec;
+
+const config = require('../../config.json');
+
+const exec = util.promisify(childProcessExec);
+
+const getBranchName = async () => {
+	const branches = (await exec('git branch')).stdout;
+	const current = (
+		branches
+			.split('\n')
+			.find(
+				(b) => b.trim()[0] === '*',
+			)
+	);
+
+	return current.substring(2);
+};
+
+const execute = async () => {
+	const branch = await getBranchName();
+
+	const postData = JSON.stringify({
+		server: config.serverName,
+		branch,
+		username: config.username,
+		password: config.password,
+	});
+
+	const options = {
+		hostname: config.appHost,
+		port: config.appPort,
+		path: '/api/change-issue',
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	};
+
+	const req = http.request(options, (res) => {
+		res.on('data', (data) => {
+			if (res.statusCode !== 200) {
+				console.log(`${data}`);
+			}
+		});
+
+		res.on('end', () => {
+			console.log('hello');
+			process.exit(0);
+		});
+	});
+
+	req.on('error', (e) => {
+		console.error(e);
+		process.exit(1);
+	});
+
+	req.write(postData);
+	req.end();
+};
+
+execute();

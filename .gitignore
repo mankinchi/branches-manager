@@ -1,3 +1,5 @@
 node_modules
 
 firebase-admin-service-worker.json
+.env
+config.json
