@@ -1,5 +1,4 @@
 node_modules
 
-firebase-admin-service-worker.json
+branches-manager.config.json
 .env
-config.json
