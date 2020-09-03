@@ -4,7 +4,7 @@ const http = require('http');
 const util = require('util');
 const childProcessExec = require('child_process').exec;
 
-const config = require('../../config.json');
+const config = require('../../branches-manager.config.json');
 
 const exec = util.promisify(childProcessExec);
 
