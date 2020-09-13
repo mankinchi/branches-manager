@@ -1,5 +1,6 @@
 {
 	"serverName": "",
+	"useHttps":,
 	"appHost": "",
 	"appPort": ,
 	"email": "",
