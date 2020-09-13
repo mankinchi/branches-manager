@@ -28,7 +28,10 @@ const main = () => {
 					'data-issueid': issueId,
 				})
 			),
-			info,
+			{
+				...info,
+				id: user.uid,
+			},
 		);
 	});
 
