@@ -34,8 +34,8 @@ The preview server is up and running on a free account so the result will not be
 * Copy the `.env.sample` into `.env` and fill the data of the file with the downloaded JSON file.
 * In Firebase Console, go to `Project Settings`, copy `Web API key` and paste the value into `.env` file with the key of `API_KEY`
 
-### For the branch you want to track
-* Register an account on the server
+### For the server you want to track
+* Register an account on the app server
 * Add a server name that you want to track
 * Add some issues that you are working on
 * If you don't have Node, install it [here](https://nodejs.org/en/download/). LTS version is fine.
@@ -50,6 +50,13 @@ git init
     * useHttps: boolean - whether your server is running through HTTP or https
     * appHost: string - your server app host (without the protocol and port)
     * appPort: string or null - if you leave it empty, default port for HTTP is 80, HTTPS is 443
+    * email: string - your account on the server
+    * password: string - your password on the server
+* Default value if you are trying out the demo server
+	* serverName: the server name (make sure you add it on the server first)
+    * useHttps: `true`
+    * appHost: `"branches-manager.herokuapp.com"`
+    * appPort: `leave empty`
     * email: string - your account on the server
     * password: string - your password on the server
 * Add the `branches-manager.config.json` to `.gitignore` to prevent publishing credentials.
