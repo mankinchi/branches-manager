@@ -32,17 +32,18 @@ const execute = async () => {
 		password: config.password,
 	});
 
+	const protocol = config.useHttps ? https : http;
+	const port = config.appPort || (config.useHttps ? 443 : 80);
+
 	const options = {
 		hostname: config.appHost,
-		port: config.appPort,
+		port,
 		path: '/api/change-issue',
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
 	};
-
-	const protocol = config.useHttps ? https : http;
 
 	const req = protocol.request(options, (res) => {
 		res.on('data', (data) => {
